@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/modelo.xhtml">	
+
+	<ui:define name="conteudo">
+		<h:form id="frmListagem">
+			<p:panel>
+				<p:dataTable id="tabela" emptyMessage="Nenhum registro encontrado"
+					paginator="true" paginatorPosition="bottom" rows="10"
+					value="#{vendaBean.vendas}" var="cursor">
+
+					<f:facet name="header">
+						<h:outputText value="Vendas - Listagem" />
+					</f:facet>
+
+					<p:column style="width: 16px;">
+						<p:rowToggler />
+					</p:column>
+
+					<p:column headerText="Código da Venda" sortBy="#{cursor.codigo}">
+						<h:outputText value="#{cursor.codigo}">
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Horário" sortBy="#{cursor.horario}">
+						<h:outputText value="#{cursor.horario}">
+							<f:convertDateTime locale="pt_BR" pattern="dd/MM/yyyy HH:mm:ss" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Preço Total" sortBy="#{cursor.valorTotal}">
+						<h:outputText value="#{cursor.valorTotal}">
+							<f:convertNumber locale="pt_BR" minFractionDigits="2" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Cliente"
+						sortBy="#{cursor.cliente.pessoa.nome}"
+						filterBy="#{cursor.cliente.pessoa.nome}">
+						<h:outputText value="#{cursor.cliente.pessoa.nome}" />
+					</p:column>
+
+					<p:column headerText="Funcionário"
+						sortBy="#{cursor.funcionario.pessoa.nome}"
+						filterBy="#{cursor.funcionario.pessoa.nome}">
+						<h:outputText value="#{cursor.funcionario.pessoa.nome}" />
+					</p:column>
+
+					<p:rowExpansion>
+						<p:dataTable emptyMessage="Nenhum registro encontrado"
+							value="#{cursor.itensVenda}" var="itemVenda">
+							<p:column headerText="Produto">
+								<h:outputText value="#{itemVenda.produto.descricao}"/>
+							</p:column>
+							
+							<p:column headerText="Quantidade">
+								<h:outputText value="#{itemVenda.quantidade}"/>
+							</p:column>
+							
+							<p:column headerText="Preço">
+								<h:outputText value="#{itemVenda.precoParcial}">
+									<f:convertNumber locale="pt_BR" minFractionDigits="2"/>
+								</h:outputText>
+							</p:column>
+						</p:dataTable>
+					</p:rowExpansion>
+
+				</p:dataTable>
+
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

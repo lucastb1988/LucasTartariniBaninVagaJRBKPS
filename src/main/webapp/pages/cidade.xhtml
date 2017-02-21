@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/modelo.xhtml">
+
+	<ui:define name="conteudo">
+
+		<h:form id="frmListagem">
+			<p:panel>
+				<p:dataTable id="tabela" emptyMessage="Nenhum registro encontrado"
+					paginator="true" paginatorPosition="bottom" rows="10"
+					value="#{cidadeBean.cidades}" var="cursor" >
+
+					<f:facet name="header">
+						<h:outputText value="Cidades - Listagem" />
+					</f:facet>
+
+					<p:column headerText="Nome" sortBy="#{cursor.nome}"
+						filterBy="#{cursor.nome}">
+						<h:outputText value="#{cursor.nome}" />
+					</p:column>
+
+					<p:column headerText="Estado" sortBy="#{cursor.estado.nome}"
+						filterBy="#{cursor.estado.nome}">
+						<h:outputText
+							value="#{cursor.estado.nome} - #{cursor.estado.sigla}" />
+					</p:column>
+
+					<p:column headerText="Opções">
+						<p:commandButton icon="ui-icon-trash"
+							actionListener="#{cidadeBean.excluir}"
+							update=":mensagem :frmListagem:tabela">
+							<p:confirm header="Confirmação"
+								message="Deseja excluir esta cidade?" icon="ui-icon-alert" />
+							<f:attribute name="cidadeSelecionada" value="#{cursor}" />
+						</p:commandButton>
+
+						<p:commandButton icon="ui-icon-pencil"
+							actionListener="#{cidadeBean.editar}"
+							oncomplete="PF('dlgCidadeNovo').show();"
+							update=":frmCadastro:painel">
+							<f:attribute name="cidadeSelecionada" value="#{cursor}" />
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+					</p:column>
+
+					<f:facet name="footer">
+						<p:commandButton value="Novo" actionListener="#{cidadeBean.novo}"
+							oncomplete="PF('dlgCidadeNovo').show();"
+							update=":frmCadastro:painel ">
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+					</f:facet>
+
+				</p:dataTable>
+
+				<p:confirmDialog global="true">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+			</p:panel>
+		</h:form>
+
+		<p:dialog widgetVar="dlgCidadeNovo" header="Cidades - Cadastro"
+			closable="false" draggable="false" resizable="false" modal="true"
+			appendTo="@(body)">
+			<h:form id="frmCadastro">
+				<h:panelGrid id="painel" columns="2">
+					<p:outputLabel for="nome" value="Nome:" />
+					<p:inputText id="nome" size="30" maxlength="30"
+						value="#{cidadeBean.cidade.nome}" required="true"
+						requiredMessage="Campo 'Nome' é obrigatório preenchimento" />
+
+					<p:outputLabel for="estado" value="Estado:" />
+					<p:selectOneMenu id="estado" filter="true"
+						value="#{cidadeBean.cidade.estado}" required="true"
+						requiredMessage="Campo 'Estado' é obrigatório preenchimento"
+						converter="omnifaces.SelectItemsConverter">
+						<f:selectItem noSelectionOption="true"
+							itemLabel="Selecione um estado" />
+						<f:selectItems value="#{cidadeBean.estados}" var="estado"
+							itemValue="#{estado}"
+							itemLabel="#{estado.nome} - #{estado.sigla}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Gravar"
+						actionListener="#{cidadeBean.salvar}"
+						oncomplete="PF('dlgCidadeNovo').hide();"
+						update=":mensagem :frmListagem:tabela :frmCadastro:painel" />
+
+					<p:commandButton value="Cancelar"
+						oncomplete="PF('dlgCidadeNovo').hide();" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+	<session-factory>
+
+		<!-- Configurações de Conexão com o Banco de Dados -->
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.connection.url">jdbc:mysql://127.0.0.1:3306/pharma</property>
+		<property name="hibernate.connection.username">root</property>
+		<property name="hibernate.connection.password">nerdss233204</property>
+
+		<!-- Pool de Conexões -->
+		<property name="hibernate.connection.pool_size">1</property>
+
+		<!-- SQL dialect -->
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
+
+		<!-- Gerenciamento do Contexto das Sessões -->
+		<property name="current_session_context_class">thread</property>
+
+		<!-- Cache de Segundo Nível -->
+		<property name="hibernate.cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</property>
+
+		<!-- Flag que indica se os SQLs gerados devem ser impressos -->
+		<property name="hibernate.show_sql">true</property>
+
+		<!-- Flag que indica se os SQLs devem ser formatados -->
+		<property name="format_sql">true</property>
+
+		<!-- Cria as tabelas do banco de dados -->
+		<property name="hibernate.hbm2ddl.auto">update</property>
+
+		<!-- Mapeamento das Entidades -->	
+		<mapping class="br.com.lucas.pharma.domain.Caixa" />	
+		<mapping class="br.com.lucas.pharma.domain.Cidade" />		
+		<mapping class="br.com.lucas.pharma.domain.Cliente" />
+		<mapping class="br.com.lucas.pharma.domain.Estado" />
+		<mapping class="br.com.lucas.pharma.domain.Fabricante" />
+		<mapping class="br.com.lucas.pharma.domain.Funcionario" />
+		<mapping class="br.com.lucas.pharma.domain.Historico" />		
+		<mapping class="br.com.lucas.pharma.domain.Movimentacao" />
+		<mapping class="br.com.lucas.pharma.domain.Pessoa" />
+		<mapping class="br.com.lucas.pharma.domain.Produto" />
+		<mapping class="br.com.lucas.pharma.domain.Usuario" />		
+		<mapping class="br.com.lucas.pharma.domain.Venda" />
+		<mapping class="br.com.lucas.pharma.domain.ItemVenda" />	
+		<mapping class="br.com.lucas.pharma.domain.Menu" />		
+
+	</session-factory>
+
+</hibernate-configuration>

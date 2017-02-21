@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/modelo.xhtml">
+
+	<ui:define name="conteudo">
+
+		<h:form id="frmListagem">
+			<p:panel>
+				<p:dataTable id="tabela" emptyMessage="#{msg['empty.message']}"
+					paginator="true" paginatorPosition="bottom" rows="10" value="#{estadoBean.estados}"
+					var="cursor">
+
+					<f:facet name="header">
+						<h:outputText value="#{msg['facet.estado.name']}" />
+					</f:facet>
+
+					<p:column headerText="#{msg['column.estado.nome']}" sortBy="#{cursor.nome}"
+						filterBy="#{cursor.nome}">
+						<h:outputText value="#{cursor.nome}" />
+					</p:column>
+
+					<p:column headerText="#{msg['column.estado.sigla']}" sortBy="#{cursor.sigla}"
+						filterBy="#{cursor.sigla}">
+						<h:outputText value="#{cursor.sigla}" />
+					</p:column>
+
+					<p:column headerText="#{msg['column.opcoes']}">					
+						<p:commandButton icon="ui-icon-trash"
+							actionListener="#{estadoBean.excluir}"
+							update=":mensagem :frmListagem:tabela">
+							<p:confirm header="#{msg['column.opcoes.confirmacao']}"
+								message="#{msg['column.estado.opcoes.confirmacao.message']}" icon="ui-icon-alert" />
+							<f:attribute name="estadoSelecionado" value="#{cursor}" />
+						</p:commandButton>
+
+						<p:commandButton icon="ui-icon-pencil"
+							actionListener="#{estadoBean.editar}"
+							oncomplete="PF('dlgEstadoNovo').show();"
+							update=":frmCadastro:painel">
+							<f:attribute name="estadoSelecionado" value="#{cursor}" />
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+					</p:column>
+
+					<f:facet name="footer">
+						<p:commandButton value="#{msg['botao.novo']}"
+							actionListener="#{estadoBean.novo}"
+							oncomplete="PF('dlgEstadoNovo').show();"
+							update=":frmCadastro:painel">
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+					</f:facet>
+
+				</p:dataTable>
+
+				<p:confirmDialog global="true">
+					<p:commandButton value="#{msg['confirmDialog.value.y']}" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />						
+					<p:commandButton value="#{msg['confirmDialog.value.n']}" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+			</p:panel>
+		</h:form>
+
+		<p:dialog widgetVar="dlgEstadoNovo" header="#{msg['dialog.estado.header']}"
+			closable="false" draggable="false" resizable="false" modal="true"
+			appendTo="@(body)">
+			<h:form id="frmCadastro">
+				<h:panelGrid id="painel" columns="2">
+				
+					<p:outputLabel for="nome" value="#{msg['label.estado.nome']}" />
+					<p:inputText id="nome" size="30" maxlength="50"
+						value="#{estadoBean.estado.nome}" required="true"
+						requiredMessage="#{msg['requiredMessage.nome']}" />
+
+					<p:outputLabel for="sigla" value="#{msg['label.estado.sigla']}" />
+					<p:inputText id="sigla" size="2" maxlength="2"
+						value="#{estadoBean.estado.sigla}" required="true"
+						requiredMessage="#{msg['requiredMessage.sigla']}" />
+						
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+				
+					<p:commandButton value="#{msg['botao.gravar']}"
+						actionListener="#{estadoBean.salvar}"
+						oncomplete="PF('dlgEstadoNovo').hide();"
+						update=":mensagem :frmCadastro:painel :frmListagem:tabela" />
+						
+					<p:commandButton value="#{msg['botao.cancelar']}"
+						oncomplete="PF('dlgEstadoNovo').hide();" />
+						
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>
